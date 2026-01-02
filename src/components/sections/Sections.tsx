@@ -1,6 +1,13 @@
 import { MagneticButton } from "@/components/MagneticButton";
 import { Phone, Zap, Clock, Settings, TrendingUp, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { useEffect } from "react";
 
 interface SectionProps {
   scrollToSection: (index: number) => void;
@@ -302,7 +309,131 @@ export function TestimonialsSection({ scrollToSection }: SectionProps) {
   );
 }
 
+export function FAQSection({ scrollToSection }: SectionProps) {
+  const faqs = [
+    {
+      question: "How does the AI phone agent actually work?",
+      answer: "Our AI agent answers incoming calls using natural language processing, understands customer inquiries, books appointments directly into your calendar, and qualifies leads based on your criteria. It sounds completely human and is trained specifically on your business.",
+    },
+    {
+      question: "Will customers know they're talking to an AI?",
+      answer: "Most customers can't tell the difference. Our AI is trained to sound natural, handle conversations smoothly, and respond appropriately to questions. We customize the voice, tone, and personality to match your brand.",
+    },
+    {
+      question: "What happens if the AI can't answer a question?",
+      answer: "The AI is smart enough to recognize when it needs human help. It will take a message, collect contact details, and immediately notify you via SMS so you can follow up. Nothing falls through the cracks.",
+    },
+    {
+      question: "How long does setup take?",
+      answer: "Most businesses are up and running within 7-14 days. This includes discovery, AI training, integration with your existing systems, and testing to ensure everything works perfectly.",
+    },
+    {
+      question: "What's included in the money-back guarantee?",
+      answer: "If we don't book you at least 10-15 qualified appointments in your first month, you get a full refund. No questions asked, no fine print. We're that confident in our service.",
+    },
+    {
+      question: "Do I need any technical knowledge?",
+      answer: "Not at all. We handle everything from setup to ongoing management. You just continue running your business while we take care of the technology.",
+    },
+  ];
+
+  return (
+    <section className="flex min-h-screen w-screen shrink-0 snap-start flex-col justify-center px-6 py-24 md:px-12">
+      <div className="mx-auto max-w-4xl w-full">
+        <div className="mb-12 text-center">
+          <p className="mb-2 font-mono text-sm text-brand-purple-light">FAQ</p>
+          <h2 className="font-sans text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+            Frequently Asked Questions
+          </h2>
+          <p className="mt-4 text-lg text-foreground/80">
+            Everything you need to know about our AI phone service.
+          </p>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {faqs.map((faq, index) => (
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className="glass-card rounded-xl border-none px-6"
+              >
+                <AccordionTrigger className="text-left font-sans text-lg font-semibold text-foreground hover:no-underline">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-foreground/70 leading-relaxed">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
+
+        <div className="mt-12 text-center">
+          <p className="mb-4 text-foreground/70">Still have questions?</p>
+          <MagneticButton size="lg" variant="primary" onClick={() => scrollToSection(5)}>
+            Book a Call
+          </MagneticButton>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function CTASection() {
+  useEffect(() => {
+    // Load Cal.com embed script
+    const script = document.createElement("script");
+    script.innerHTML = `
+      (function (C, A, L) {
+        let p = function (a, ar) { a.q.push(ar); };
+        let d = C.document;
+        C.Cal = C.Cal || function () {
+          let cal = C.Cal;
+          let ar = arguments;
+          if (!cal.loaded) {
+            cal.ns = {};
+            cal.q = cal.q || [];
+            d.head.appendChild(d.createElement("script")).src = A;
+            cal.loaded = true;
+          }
+          if (ar[0] === L) {
+            const api = function () { p(api, arguments); };
+            const namespace = ar[1];
+            api.q = api.q || [];
+            if (typeof namespace === "string") {
+              cal.ns[namespace] = cal.ns[namespace] || api;
+              p(cal.ns[namespace], ar);
+              p(cal, ["initNamespace", namespace]);
+            } else p(cal, ar);
+            return;
+          }
+          p(cal, ar);
+        };
+      })(window, "https://app.cal.com/embed/embed.js", "init");
+
+      Cal("init", "tradesmen-marketing", { origin: "https://app.cal.com" });
+
+      Cal.ns["tradesmen-marketing"]("inline", {
+        elementOrSelector: "#my-cal-inline-tradesmen-marketing",
+        config: { layout: "month_view" },
+        calLink: "himnishbajgai/tradesmen-marketing",
+      });
+
+      Cal.ns["tradesmen-marketing"]("ui", { hideEventTypeDetails: false, layout: "month_view" });
+    `;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   return (
     <section className="flex min-h-screen w-screen shrink-0 snap-start flex-col justify-center px-6 py-24 md:px-12">
       <div className="mx-auto max-w-6xl">
@@ -323,20 +454,10 @@ export function CTASection() {
           viewport={{ once: true }}
           className="glass-card mx-auto max-w-4xl rounded-2xl p-4 md:p-8"
         >
-          <div className="flex min-h-[400px] items-center justify-center rounded-xl bg-background/50">
-            <div className="text-center p-8">
-              <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-                <Phone className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="mb-2 text-2xl font-bold text-foreground">Schedule a Call</h3>
-              <p className="mb-6 text-foreground/70 max-w-md">
-                Click below to schedule your free 15-minute demo call. We'll show you exactly how our AI can work for your business.
-              </p>
-              <MagneticButton size="lg" variant="primary">
-                Schedule Now
-              </MagneticButton>
-            </div>
-          </div>
+          <div
+            id="my-cal-inline-tradesmen-marketing"
+            className="min-h-[500px] w-full overflow-auto rounded-xl bg-background/50"
+          />
         </motion.div>
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
