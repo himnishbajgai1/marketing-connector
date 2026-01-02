@@ -9,6 +9,7 @@ import {
   ServicesSection,
   ProcessSection,
   TestimonialsSection,
+  FAQSection,
   CTASection,
 } from "@/components/sections/Sections";
 
@@ -56,7 +57,7 @@ const Index = () => {
       const deltaX = touchStartX.current - touchEndX;
 
       if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
-        if (deltaY > 0 && currentSection < 4) {
+        if (deltaY > 0 && currentSection < 5) {
           scrollToSection(currentSection + 1);
         } else if (deltaY < 0 && currentSection > 0) {
           scrollToSection(currentSection - 1);
@@ -92,7 +93,7 @@ const Index = () => {
         scrollThrottleRef.current = undefined;
       }, 800);
 
-      if (e.deltaY > 0 && currentSection < 4) {
+      if (e.deltaY > 0 && currentSection < 5) {
         scrollToSection(currentSection + 1);
       } else if (e.deltaY < 0 && currentSection > 0) {
         scrollToSection(currentSection - 1);
@@ -143,10 +144,11 @@ const Index = () => {
         <ServicesSection scrollToSection={scrollToSection} />
         <ProcessSection scrollToSection={scrollToSection} />
         <TestimonialsSection scrollToSection={scrollToSection} />
+        <FAQSection scrollToSection={scrollToSection} />
         <CTASection />
       </div>
 
-      <SectionDots currentSection={currentSection} scrollToSection={scrollToSection} />
+      <SectionDots currentSection={currentSection} scrollToSection={scrollToSection} totalSections={6} />
     </main>
   );
 };
